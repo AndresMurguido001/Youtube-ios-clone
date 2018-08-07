@@ -34,7 +34,7 @@ class Menubar: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UIC
     }
     
     let cellId = "menubarCell"
-    let imageNames = ["Home", "flame", "settings", "user"]
+    let imageNames = ["Home", "flame", "playlist", "user"]
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

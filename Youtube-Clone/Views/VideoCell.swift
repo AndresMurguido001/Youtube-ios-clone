@@ -24,6 +24,38 @@ class BaseCell: UICollectionViewCell {
 
 class VideoCell: BaseCell {
     
+    var video: Video? {
+        didSet {
+            titleLabel.text = video?.title
+            if let videoImage = video?.thumbnailImageName {
+                thumbnailImageView.image = UIImage(named: videoImage)
+            }
+            if let profileImageName = video?.channel?.profileImageName {
+                userProfileImageView.image = UIImage(named: profileImageName)
+            }
+            if let channelName = video?.channel?.name, let numberOfViews = video?.numberOfViews {
+                let numberFormatter = NumberFormatter()
+                numberFormatter.numberStyle = .decimal
+                let subTitleText = "\(channelName) • \(numberFormatter.string(from: numberOfViews)!) • 2 years ago"
+                subtitleLabel.text = subTitleText
+            }
+            
+            //measure title text
+            if let videoTitle = video?.title {
+                let size = CGSize(width: frame.width - 16 - 44 - 8 - 16, height: 1000)
+                let options = NSStringDrawingOptions.usesFontLeading.union(NSStringDrawingOptions.usesLineFragmentOrigin)
+                let estimatedRect = NSString(string: videoTitle).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font : UIFont.systemFont(ofSize: 14)], context: nil)
+                
+                if estimatedRect.size.height > 20 {
+                    titleLabelHeightConstraint?.constant = 44
+                } else {
+                    titleLabelHeightConstraint?.constant = 20
+                }
+            }
+            
+        }
+    }
+    
     let thumbnailImageView: UIImageView = {
         
         let imageView = UIImageView()
@@ -50,6 +82,7 @@ class VideoCell: BaseCell {
         let label = UILabel()
         label.text = "Drake - Energy"
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 2
         return label
     }()
     
@@ -61,6 +94,8 @@ class VideoCell: BaseCell {
         textView.textColor = UIColor.lightGray
         return textView
     }()
+    
+    var titleLabelHeightConstraint: NSLayoutConstraint?
     
     override func setupViews(){
         addSubview(thumbnailImageView)
@@ -74,7 +109,7 @@ class VideoCell: BaseCell {
         addContraintsWithFormat(format: "H:|[v0]|", views: seperatorView)
         addContraintsWithFormat(format: "H:|-16-[v0(44)]|", views: userProfileImageView)
         //Vertical Constraints
-        addContraintsWithFormat(format: "V:|-16-[v0]-8-[v1(44)]-16-[v2(1)]|", views: thumbnailImageView, userProfileImageView, seperatorView)
+        addContraintsWithFormat(format: "V:|-16-[v0]-8-[v1(44)]-36-[v2(1)]|", views: thumbnailImageView, userProfileImageView, seperatorView)
         
         //title Label top constraints
         addConstraint(NSLayoutConstraint(item: titleLabel, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: thumbnailImageView, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 8))
@@ -82,8 +117,10 @@ class VideoCell: BaseCell {
         addConstraint(NSLayoutConstraint(item: titleLabel, attribute: NSLayoutAttribute.left, relatedBy: NSLayoutRelation.equal, toItem: userProfileImageView, attribute: NSLayoutAttribute.right, multiplier: 1, constant: 8))
         //title right constraint
         addConstraint(NSLayoutConstraint(item: titleLabel, attribute: NSLayoutAttribute.right, relatedBy: NSLayoutRelation.equal, toItem: thumbnailImageView, attribute: NSLayoutAttribute.right, multiplier: 1, constant: 0))
+        
         //title height
-        addConstraint(NSLayoutConstraint(item: titleLabel, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.height, multiplier: 0, constant: 20))
+        titleLabelHeightConstraint = NSLayoutConstraint(item: titleLabel, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.height, multiplier: 0, constant: 44)
+        addConstraint(titleLabelHeightConstraint!)
         
         //SUBTITLE TEXT VIEW
         addConstraint(NSLayoutConstraint(item: subtitleLabel, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: titleLabel, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 4))
