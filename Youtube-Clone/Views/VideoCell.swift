@@ -1,0 +1,103 @@
+//
+//  VideoCell.swift
+//  Youtube-Clone
+//
+//  Created by andres murguido on 8/7/18.
+//  Copyright © 2018 andres murguido. All rights reserved.
+//
+
+import UIKit
+
+class BaseCell: UICollectionViewCell {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupViews()
+    }
+    func setupViews(){
+        
+    }
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}
+
+class VideoCell: BaseCell {
+    
+    let thumbnailImageView: UIImageView = {
+        
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "DrakeVevo1-Energy")
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        return imageView
+    }()
+    
+    let userProfileImageView: UIImageView = {
+        let view = UIImageView()
+        view.layer.cornerRadius = 22
+        view.layer.masksToBounds = true
+        view.image = UIImage(named: "drakeIcon")
+        return view
+    }()
+    
+    let seperatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+        return view
+    }()
+    let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Drake - Energy"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let subtitleLabel: UITextView = {
+        let textView = UITextView()
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.text = "DrakeVevo • 1,235,435 • 1 year ago"
+        textView.textContainerInset = UIEdgeInsets(top: 1, left: -4, bottom: 0, right: 0)
+        textView.textColor = UIColor.lightGray
+        return textView
+    }()
+    
+    override func setupViews(){
+        addSubview(thumbnailImageView)
+        addSubview(seperatorView)
+        addSubview(userProfileImageView)
+        addSubview(titleLabel)
+        addSubview(subtitleLabel)
+        
+        //Horizontal Constraints
+        addContraintsWithFormat(format: "H:|-16-[v0]-16-|", views: thumbnailImageView)
+        addContraintsWithFormat(format: "H:|[v0]|", views: seperatorView)
+        addContraintsWithFormat(format: "H:|-16-[v0(44)]|", views: userProfileImageView)
+        //Vertical Constraints
+        addContraintsWithFormat(format: "V:|-16-[v0]-8-[v1(44)]-16-[v2(1)]|", views: thumbnailImageView, userProfileImageView, seperatorView)
+        
+        //title Label top constraints
+        addConstraint(NSLayoutConstraint(item: titleLabel, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: thumbnailImageView, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 8))
+        //title label left constraint
+        addConstraint(NSLayoutConstraint(item: titleLabel, attribute: NSLayoutAttribute.left, relatedBy: NSLayoutRelation.equal, toItem: userProfileImageView, attribute: NSLayoutAttribute.right, multiplier: 1, constant: 8))
+        //title right constraint
+        addConstraint(NSLayoutConstraint(item: titleLabel, attribute: NSLayoutAttribute.right, relatedBy: NSLayoutRelation.equal, toItem: thumbnailImageView, attribute: NSLayoutAttribute.right, multiplier: 1, constant: 0))
+        //title height
+        addConstraint(NSLayoutConstraint(item: titleLabel, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.height, multiplier: 0, constant: 20))
+        
+        //SUBTITLE TEXT VIEW
+        addConstraint(NSLayoutConstraint(item: subtitleLabel, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: titleLabel, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 4))
+        //subtitle label left constraint
+        addConstraint(NSLayoutConstraint(item: subtitleLabel, attribute: NSLayoutAttribute.left, relatedBy: NSLayoutRelation.equal, toItem: userProfileImageView, attribute: NSLayoutAttribute.right, multiplier: 1, constant: 8))
+        //subtitle right constraint
+        addConstraint(NSLayoutConstraint(item: subtitleLabel, attribute: NSLayoutAttribute.right, relatedBy: NSLayoutRelation.equal, toItem: thumbnailImageView, attribute: NSLayoutAttribute.right, multiplier: 1, constant: 0))
+        //subtitle height
+        addConstraint(NSLayoutConstraint(item: subtitleLabel, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.height, multiplier: 0, constant: 30))
+        
+    }
+    
+    
+}
+
+
+
