@@ -10,28 +10,54 @@ import UIKit
 
 class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
-    var videos: [Video] = {
-        var drakeChannel = Channel()
-        drakeChannel.name = "Drake"
-        drakeChannel.profileImageName = "user"
-        
-       var godsPlan = Video()
-        godsPlan.title = "Drake - Gods Plan"
-        godsPlan.thumbnailImageName = "DrakeVevo5-GodsPlan"
-        godsPlan.channel = drakeChannel
-        godsPlan.numberOfViews = 1675340
-        
-        var whatsMyName = Video()
-        whatsMyName.thumbnailImageName = "DrakeVevo4-WhatsMyName"
-        whatsMyName.title = "Drake - Whats My Name featuring Rihanna"
-        whatsMyName.channel = drakeChannel
-        whatsMyName.numberOfViews = 2567030
-        return [godsPlan, whatsMyName]
-    }()
+    var videos: [Video]?
+    
+    let getSongsUrl = URL(string: "https://s3-us-west-2.amazonaws.com/youtubeassets/home.json")
+    let defaultSession = URLSession(configuration: .default)
+    var dataTask: URLSessionDataTask?
 
+    func fetchVideos(){
+        URLSession.shared.dataTask(with: getSongsUrl!) { (data, response, error) in
+            if error != nil {
+                print("Error making request")
+            }
+            do {
+                let json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers)
+                self.videos = [Video]()
+                for dictionary in json as! [[String : AnyObject]] {
+                    
+                    let video = Video()
+                    video.title = dictionary["title"] as? String
+                    video.thumbnailImageName = dictionary["thumbnail_image_name"] as? String
+                    let channel = Channel()
+                    let channelDictionary = dictionary["channel"] as! [String : AnyObject]
+                    channel.name = channelDictionary["name"] as? String
+                    channel.profileImageName = channelDictionary["profile_image_name"] as? String
+                    video.channel = channel
+                    self.videos?.append(video)
+                }
+                DispatchQueue.main.async {
+                    self.collectionView?.reloadData()
+                }
+            
+            } catch let jsonError {
+                print(jsonError)
+            }
+            
+
+            
+        }.resume()
+        
+        
+            
+            
+        
+           
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        fetchVideos()
         navigationItem.title = "Home"
         
         navigationController?.navigationBar.isTranslucent = false
@@ -43,8 +69,10 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: view.frame.width - 32, height: view.frame.height))
         titleLabel.text = "Home"
         titleLabel.textColor = UIColor.white
+        
         titleLabel.font = UIFont.systemFont(ofSize: 20)
         navigationItem.titleView =  titleLabel
+        
         collectionView?.backgroundColor = UIColor.white
         collectionView?.contentInset = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
         collectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
@@ -55,6 +83,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     let menubar: Menubar = {
         let mb = Menubar()
+        
         return mb
     }()
     
@@ -66,14 +95,14 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return videos.count
+        return videos?.count ?? 0
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId", for: indexPath) as! VideoCell
         
-        cell.video = videos[indexPath.item]
+        cell.video = videos?[indexPath.item]
         
         return cell
     }
@@ -90,11 +119,15 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         let searchImage = UIImage(named: "search")?.withRenderingMode(.alwaysOriginal)
         let searchBarButton = UIBarButtonItem(image: searchImage, style: .plain, target: self, action: #selector(handleSearch))
         let moreButton = UIBarButtonItem(image: UIImage(named: "more")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleMore))
+        searchBarButton.tintColor = UIColor.white
+        moreButton.tintColor = UIColor.white
         navigationItem.rightBarButtonItems = [moreButton, searchBarButton]
     }
-    @objc func handleMore(_ sender: UIBarButtonItem){
-        print("More")
+    let settingsLauncher = SettingsLauncher()
+    @objc func handleMore(){
+        settingsLauncher.showSettings()
     }
+
     @objc func handleSearch(_ sender: UIBarButtonItem){
         print(123)
     }

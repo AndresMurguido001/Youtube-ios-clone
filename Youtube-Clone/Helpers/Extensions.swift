@@ -20,6 +20,7 @@ extension UIView {
         var viewsDictionary = [String: UIView]()
         for (index, view) in views.enumerated(){
             let key = "v\(index)"
+            view.clipsToBounds = true
             view.translatesAutoresizingMaskIntoConstraints = false
             viewsDictionary[key] = view
         }
@@ -27,3 +28,46 @@ extension UIView {
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: format, options: NSLayoutFormatOptions(), metrics: nil, views: viewsDictionary))
     }
 }
+
+let imageCache = NSCache<NSString, UIImage>()
+
+class CustomImageView: UIImageView {
+    
+    var imageUrlString: String?
+    
+    func loadImageUsingUrlString(urlString: String){
+        
+        imageUrlString = urlString
+        
+        let url = URL(string: urlString)
+        
+        image = nil
+        
+        if let imageFromCache = imageCache.object(forKey: urlString as NSString){
+            self.image = imageFromCache
+            return
+        }
+        
+        URLSession.shared.dataTask(with: url!) { (data, response, error) in
+            if error != nil {
+                print("ERROR!!!!!!!!!!:", String(describing: error))
+                return
+            }
+            DispatchQueue.main.async {
+                if let imageToCache = UIImage(data: data!) {
+                    
+                    if self.imageUrlString == urlString {
+                        self.image = imageToCache
+                    }
+                    imageCache.setObject(imageToCache, forKey: urlString as NSString)
+                }
+            }
+            }.resume()
+    }
+}
+
+
+
+
+
+

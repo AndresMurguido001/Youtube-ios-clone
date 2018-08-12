@@ -27,12 +27,10 @@ class VideoCell: BaseCell {
     var video: Video? {
         didSet {
             titleLabel.text = video?.title
-            if let videoImage = video?.thumbnailImageName {
-                thumbnailImageView.image = UIImage(named: videoImage)
-            }
-            if let profileImageName = video?.channel?.profileImageName {
-                userProfileImageView.image = UIImage(named: profileImageName)
-            }
+            
+                setupThubnailImage()
+                setupProfileImage()
+
             if let channelName = video?.channel?.name, let numberOfViews = video?.numberOfViews {
                 let numberFormatter = NumberFormatter()
                 numberFormatter.numberStyle = .decimal
@@ -56,25 +54,39 @@ class VideoCell: BaseCell {
         }
     }
     
-    let thumbnailImageView: UIImageView = {
+    func setupThubnailImage(){
+        if let thumbnailImageUrl = video?.thumbnailImageName {
+           thumbnailImageView.loadImageUsingUrlString(urlString: thumbnailImageUrl)
+        }
+    }
+    func setupProfileImage() {
+        if let userProfileImg = video?.channel?.profileImageName {
+            userProfileImageView.loadImageUsingUrlString(urlString: userProfileImg)
+        }
+    }
+    
+    let thumbnailImageView: CustomImageView = {
         
-        let imageView = UIImageView()
+        let imageView = CustomImageView()
         imageView.image = UIImage(named: "DrakeVevo1-Energy")
         imageView.contentMode = .scaleAspectFill
+        
         imageView.clipsToBounds = true
         return imageView
     }()
     
-    let userProfileImageView: UIImageView = {
-        let view = UIImageView()
+    let userProfileImageView: CustomImageView = {
+        let view = CustomImageView()
+        view.image = UIImage(named: "drakeIcon")
         view.layer.cornerRadius = 22
         view.layer.masksToBounds = true
-        view.image = UIImage(named: "drakeIcon")
+        view.contentMode = .scaleAspectFill
         return view
     }()
     
     let seperatorView: UIView = {
         let view = UIView()
+        
         view.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         return view
     }()
@@ -121,6 +133,7 @@ class VideoCell: BaseCell {
         //title height
         titleLabelHeightConstraint = NSLayoutConstraint(item: titleLabel, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.height, multiplier: 0, constant: 44)
         addConstraint(titleLabelHeightConstraint!)
+        
         
         //SUBTITLE TEXT VIEW
         addConstraint(NSLayoutConstraint(item: subtitleLabel, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: titleLabel, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 4))
