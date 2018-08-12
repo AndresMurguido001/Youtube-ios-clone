@@ -36,6 +36,8 @@ class SettingsLauncher: NSObject, UICollectionViewDataSource, UICollectionViewDe
         return [Setting(name: "Settings", imageName: "settingsOne"), Setting(name: "Terms & Privacy Policy", imageName: "locked"), Setting(name: "Send Feedback", imageName: "feedback"), Setting(name: "Help", imageName: "info"), Setting(name: "Switch Account", imageName: "userOne"), Setting(name: "Cancel", imageName: "cancel")]
     }()
     
+    var homeController: HomeController?
+    
     @objc func showSettings(){
         // handle more
         if let window = UIApplication.shared.keyWindow {
@@ -62,12 +64,16 @@ class SettingsLauncher: NSObject, UICollectionViewDataSource, UICollectionViewDe
             }, completion: nil)
         }
     }
-    @objc func handleDismiss(){
-        UIView.animate(withDuration: 0.5) {
+    @objc func handleDismiss(setting: Setting){
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.overlay.alpha = 0
             
             if let window = UIApplication.shared.keyWindow {
-             self.collectionView.frame = CGRect(x: 0, y: window.frame.height, width: self.collectionView.frame.width, height: self.collectionView.frame.height)
+                self.collectionView.frame = CGRect(x: 0, y: window.frame.height, width: self.collectionView.frame.width, height: self.collectionView.frame.height)
+            }
+        }) { (completed: Bool) in
+            if setting.name != "" && setting.name != "Cancel" {
+                self.homeController?.showControllerForSettings(setting: setting)
             }
         }
     }
@@ -89,6 +95,10 @@ class SettingsLauncher: NSObject, UICollectionViewDataSource, UICollectionViewDe
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        handleDismiss(setting: settingsArr[indexPath.item])
     }
     
     override init() {
