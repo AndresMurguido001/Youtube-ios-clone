@@ -20,7 +20,7 @@ class SettingCell: BaseCell {
     
     var setting: Setting? {
         didSet {
-            nameLabel.text = setting?.name
+            nameLabel.text = setting?.name.rawValue
             if let cellimage = setting?.imageName {
                 iconImage.tintColor = UIColor.black
                 iconImage.image = UIImage(named: cellimage)?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
