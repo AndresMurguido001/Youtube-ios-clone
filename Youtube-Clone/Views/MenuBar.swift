@@ -21,6 +21,8 @@ class Menubar: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UIC
         return cv
     }()
     
+    var homeController: HomeController?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         collectionView.register(MenuBarCell.self, forCellWithReuseIdentifier: cellId)
@@ -30,7 +32,30 @@ class Menubar: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UIC
         
         backgroundColor = UIColor.rgb(red: 255, green: 32, blue: 31)
         let selectedIndex = IndexPath(item: 0, section: 0)
-        collectionView.selectItem(at: selectedIndex, animated: false, scrollPosition: .centeredHorizontally)
+        collectionView.selectItem(at: selectedIndex, animated: true, scrollPosition: .centeredHorizontally)
+        
+        setupHorizontalBar()
+    }
+    
+    var horizontalBarLeftAnchor: NSLayoutConstraint?
+    
+    func setupHorizontalBar(){
+        let horizontalBarView = UIView()
+        horizontalBarView.backgroundColor = UIColor.white
+        horizontalBarView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(horizontalBarView)
+        //old school - Using CGRect
+        //new school way of laying out views ios9
+        //X, Y, Width, Height constraints
+        horizontalBarLeftAnchor = horizontalBarView.leftAnchor.constraint(equalTo: self.leftAnchor)
+        horizontalBarLeftAnchor?.isActive = true
+        horizontalBarView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        horizontalBarView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 1 / 4).isActive = true
+        horizontalBarView.heightAnchor.constraint(equalToConstant: 4).isActive = true
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        homeController?.scrollToMenuIndex(menuIndex: indexPath.item)
     }
     
     let cellId = "menubarCell"
