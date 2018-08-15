@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4B1D525121237D24002331E6 /* VideoLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1D525021237D24002331E6 /* VideoLauncher.swift */; };
 		4BBCA52C2119ED3D00DBC519 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBCA52B2119ED3D00DBC519 /* AppDelegate.swift */; };
 		4BBCA52E2119ED3D00DBC519 /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBCA52D2119ED3D00DBC519 /* HomeController.swift */; };
 		4BBCA5312119ED3D00DBC519 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4BBCA52F2119ED3D00DBC519 /* Main.storyboard */; };
@@ -25,6 +26,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4B1D525021237D24002331E6 /* VideoLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoLauncher.swift; sourceTree = "<group>"; };
 		4BBCA5282119ED3D00DBC519 /* Youtube-Clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Youtube-Clone.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BBCA52B2119ED3D00DBC519 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4BBCA52D2119ED3D00DBC519 /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
@@ -92,6 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				4BBCA53E211A0FB200DBC519 /* Extensions.swift */,
+				4B1D525021237D24002331E6 /* VideoLauncher.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -212,6 +215,7 @@
 				4BBCA542211A102300DBC519 /* VideoCell.swift in Sources */,
 				4BF24F9521209E1F0069C6C7 /* SettingsController.swift in Sources */,
 				4BF1F698212213B40043A812 /* ApiService.swift in Sources */,
+				4B1D525121237D24002331E6 /* VideoLauncher.swift in Sources */,
 				4BF1F69C212323AA0043A812 /* TrendingCellCollectionViewCell.swift in Sources */,
 				4BBCA53F211A0FB200DBC519 /* Extensions.swift in Sources */,
 				4BBCA52C2119ED3D00DBC519 /* AppDelegate.swift in Sources */,
