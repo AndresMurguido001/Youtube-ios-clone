@@ -18,6 +18,14 @@ class VideoPlayerView: UIView {
         return aiv
     }()
     
+    let relatedVideos: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.backgroundColor = .yellow
+        cv.translatesAutoresizingMaskIntoConstraints = false
+        return cv
+    }()
+    
     let controlsContainerView: UIView = {
        let view = UIView()
         view.backgroundColor = UIColor(white: 0, alpha: 1)
@@ -105,6 +113,9 @@ class VideoPlayerView: UIView {
         }
     }
     
+    
+    
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .black
@@ -137,6 +148,12 @@ class VideoPlayerView: UIView {
         videoSlider.rightAnchor.constraint(equalTo: videoLengthLabel.leftAnchor).isActive = true
         videoSlider.leftAnchor.constraint(equalTo: currentTimeLabel.rightAnchor).isActive = true
         videoSlider.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        
+        
+        
+        
+        
+        
         
         
         activityIndicatorView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
@@ -212,8 +229,10 @@ class VideoPlayerView: UIView {
 }
 
 class VideoLauncher: NSObject {
+    
     func showVideoPlayer(){
         print("Showing video player animation")
+        
         
         if let keyWindow = UIApplication.shared.keyWindow {
             let view = UIView(frame: keyWindow.frame)
@@ -225,6 +244,10 @@ class VideoLauncher: NSObject {
             let videoPlayerFrame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height)
             let videoPlayerView = VideoPlayerView(frame: videoPlayerFrame)
             view.addSubview(videoPlayerView)
+            
+            let layout = UICollectionViewFlowLayout()
+            let relatedView = Related(frame: CGRect(x: 0, y: videoPlayerView.frame.height, width: keyWindow.frame.width, height: keyWindow.frame.height - videoPlayerView.frame.height), collectionViewLayout: layout)
+            view.addSubview(relatedView)
             UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
                 view.frame = keyWindow.frame
             }) { (completedAnimation) in
